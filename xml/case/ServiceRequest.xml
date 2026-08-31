@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Village Profile — Service Request case type
+  villagedesk/village-profile : xml/case/ServiceRequest.xml
+
+  A member asks for something; a coordinator owns it; a volunteer does it; it closes with a
+  recorded outcome. Ride, loan closet, home help, tech help and friendly visiting all share
+  that shape, so they are one case type distinguished by the activity inside it, not five
+  case types.
+
+  Custom fields are unaffected by this file. Case activities ARE activities, so the
+  `village_service` group (mileage, destination type, request channel, reimbursed) attaches
+  exactly as it would to a standalone activity, and reporting is identical.
+
+  VERIFIED against CiviCRM 6.17 — two behaviours worth knowing, both of which cost time:
+
+  1. The case type's machine NAME comes from this FILE'S NAME, not from <name> below.
+     ServiceRequest.xml yields case_type_id "ServiceRequest". The <name> element becomes the
+     human-readable TITLE. Rename the file and you rename the case type.
+
+  2. Inside <CaseRoles>, the relationship name is the one seen FROM THE CLIENT — the
+     name_b_a direction. Confirmed by creating a case: the role populated with the client as
+     contact_id_a and the coordinator as contact_id_b. Declaring the a_b name instead yields
+     roles that silently never populate.
+
+  Also confirmed: this requires the case-xml mixin in info.xml. Without it CiviCRM never
+  scans xml/case/ and the case type simply does not exist, with no error anywhere.
+-->
+<CaseType>
+  <name>Service Request</name>
+
+  <!--
+    Every activity type that may appear on this case. Stock case-management types are
+    required for the case UI to function; the village_* types are declared in the profile
+    manifest §3 and must exist before this case type installs.
+  -->
+  <ActivityTypes>
+    <ActivityType>
+      <name>Open Case</name>
+      <max_instances>1</max_instances>
+    </ActivityType>
+    <ActivityType>
+      <name>Follow up</name>
+    </ActivityType>
+    <ActivityType>
+      <name>Change Case Status</name>
+    </ActivityType>
+    <ActivityType>
+      <name>Change Case Start Date</name>
+    </ActivityType>
+    <ActivityType>
+      <name>Assign Case Role</name>
+    </ActivityType>
+    <ActivityType>
+      <name>Remove Case Role</name>
+    </ActivityType>
+    <ActivityType>
+      <name>Phone Call</name>
+    </ActivityType>
+    <ActivityType>
+      <name>Email</name>
+    </ActivityType>
+
+    <!-- The village services themselves. -->
+    <ActivityType>
+      <name>village_ride</name>
+    </ActivityType>
+    <ActivityType>
+      <name>village_loan_closet</name>
+    </ActivityType>
+    <ActivityType>
+      <name>village_service_request</name>
+    </ActivityType>
+  </ActivityTypes>
+
+  <ActivitySets>
+    <!--
+      Runs when the case opens. Four steps, because a village coordinator's real job is:
+      write it down, find someone, tell the member, check it happened.
+
+      Deliberately NOT automated further. A timeline that creates a dozen scheduled
+      activities produces a permanently red dashboard and volunteers who stop reading it.
+    -->
+    <ActivitySet>
+      <name>standard_timeline</name>
+      <label>Standard Timeline</label>
+      <timeline>true</timeline>
+      <ActivityTypes>
+
+        <!-- The request as taken. Most arrive by phone, so this is usually already done. -->
+        <ActivityType>
+          <name>Open Case</name>
+          <label>Request received</label>
+          <status>Completed</status>
+          <default_assignee_type>USER_CREATING_THE_CASE</default_assignee_type>
+        </ActivityType>
+
+        <!-- Find a volunteer. Same day. This is the step that actually fails. -->
+        <ActivityType>
+          <name>Assign Case Role</name>
+          <label>Find a volunteer</label>
+          <status>Scheduled</status>
+          <reference_activity>Open Case</reference_activity>
+          <reference_offset>0</reference_offset>
+          <reference_select>newest</reference_select>
+          <default_assignee_type>BY_RELATIONSHIP</default_assignee_type>
+          <default_assignee_relationship>Village Coordinator</default_assignee_relationship>
+        </ActivityType>
+
+        <!-- Close the loop with the member. Nothing erodes trust faster than silence. -->
+        <ActivityType>
+          <name>Phone Call</name>
+          <label>Confirm with member</label>
+          <status>Scheduled</status>
+          <reference_activity>Open Case</reference_activity>
+          <reference_offset>1</reference_offset>
+          <reference_select>newest</reference_select>
+          <default_assignee_type>BY_RELATIONSHIP</default_assignee_type>
+          <default_assignee_relationship>Village Coordinator</default_assignee_relationship>
+        </ActivityType>
+
+        <!-- After the service. Where mileage and duration get recorded if the driver didn't. -->
+        <ActivityType>
+          <name>Follow up</name>
+          <label>Confirm completed and record mileage</label>
+          <status>Scheduled</status>
+          <reference_activity>Open Case</reference_activity>
+          <reference_offset>7</reference_offset>
+          <reference_select>newest</reference_select>
+          <default_assignee_type>BY_RELATIONSHIP</default_assignee_type>
+          <default_assignee_relationship>Village Coordinator</default_assignee_relationship>
+        </ActivityType>
+
+      </ActivityTypes>
+    </ActivitySet>
+
+    <!--
+      Not a timeline: an on-demand set a coordinator adds when a request turns into an
+      ongoing arrangement — a standing weekly dialysis run, a loan item out for months.
+    -->
+    <ActivitySet>
+      <name>ongoing_arrangement</name>
+      <label>Ongoing arrangement</label>
+      <timeline>false</timeline>
+      <ActivityTypes>
+        <ActivityType>
+          <name>Follow up</name>
+          <label>Check in with member</label>
+          <status>Scheduled</status>
+        </ActivityType>
+      </ActivityTypes>
+    </ActivitySet>
+  </ActivitySets>
+
+  <!--
+    Who is who, relative to the member.
+
+    `Village Coordinator` owns the case and is both creator and manager. `Service Volunteer`
+    is the person who drives, lifts, fixes or visits — and is intentionally NOT the manager,
+    because a volunteer should never be answerable for the case, only for their part of it.
+
+    Both relationship types are declared in the profile manifest §4. Emergency Contact is
+    deliberately absent: it exists on the contact and should not be pulled into a service
+    case, where it would widen who can see the member's requests.
+  -->
+  <CaseRoles>
+    <RelationshipType>
+      <name>Village Coordinator</name>
+      <creator>1</creator>
+      <manager>1</manager>
+    </RelationshipType>
+    <RelationshipType>
+      <name>Service Volunteer</name>
+      <creator>0</creator>
+      <manager>0</manager>
+    </RelationshipType>
+  </CaseRoles>
+
+  <!--
+    Volunteers are contacts, not necessarily WordPress users. Restricting assignment to CMS
+    users would make most of the roster unassignable.
+  -->
+  <RestrictActivityAsgmtToCmsUser>0</RestrictActivityAsgmtToCmsUser>
+</CaseType>

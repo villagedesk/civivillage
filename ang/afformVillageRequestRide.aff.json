@@ -1,0 +1,10 @@
+{
+    "type": "form",
+    "title": "Request a ride",
+    "description": "A member asks for transport. Creates a Ride Request activity assigned to no one yet; a coordinator picks it up from the service desk.",
+    "is_public": false,
+    "permission": ["access CiviCRM"],
+    "server_route": "civicrm/village/request-ride",
+    "redirect": null,
+    "create_submission": true
+}

@@ -1,0 +1,19 @@
+<af-form ctrl="afform">
+  <af-entity
+    type="Activity"
+    name="Activity1"
+    label="Ride Request"
+    actions="{create: true, update: false}"
+    security="FBAC"
+    data="{activity_type_id.name: 'village_ride', status_id.name: 'Scheduled', source_contact_id: 'user_contact_id', target_contact_id: ['user_contact_id']}" />
+
+  <fieldset af-fieldset="Activity1" class="af-container" af-title="Request a ride">
+    <p>Tell us where you need to go and when. A coordinator will find a volunteer driver and call you back to confirm.</p>
+    <af-field name="subject" defn="{label: 'Where do you need to go?', required: true, input_attrs: {placeholder: 'Cardiology appointment, Culpeper'}}" />
+    <af-field name="activity_date_time" defn="{label: 'When is the appointment?', required: true}" />
+    <af-field name="village_service.village_destination_type" defn="{label: 'What kind of trip is this?', required: true}" />
+    <af-field name="details" defn="{label: 'Anything the driver should know?', input_type: 'TextArea', required: false, input_attrs: {rows: 3, placeholder: 'Uses a folding walker; allow extra time.'}}" />
+  </fieldset>
+
+  <button class="af-button btn btn-primary btn-lg" crm-icon="fa-check" ng-click="afform.submit()" ng-if="afform.showSubmitButton">Request this ride</button>
+</af-form>
