@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<extension key="villageprofile" type="module">
-  <file>villageprofile</file>
-  <name>Village Profile</name>
+<extension key="civivillage" type="module">
+  <file>civivillage</file>
+  <name>Civi Village</name>
   <description>Turns a bare CiviCRM into a village: service activity types, member and service custom fields, household and emergency-contact relationships, and the Service Request case type.</description>
   <license>AGPL-3.0</license>
   <authors>
@@ -12,9 +12,9 @@
     </author>
   </authors>
   <urls>
-    <url desc="Main Extension Page">https://github.com/villagedesk/villageprofile</url>
-    <url desc="Documentation">https://github.com/villagedesk/villageprofile#readme</url>
-    <url desc="Support">https://github.com/villagedesk/villageprofile/issues</url>
+    <url desc="Main Extension Page">https://github.com/villagedesk/civivillage</url>
+    <url desc="Documentation">https://github.com/villagedesk/civivillage#readme</url>
+    <url desc="Support">https://github.com/villagedesk/civivillage/issues</url>
     <url desc="Licensing">https://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
   <releaseDate>2026-08-30</releaseDate>
@@ -42,9 +42,9 @@
     <psr4 prefix="Civi\" path="Civi"/>
   </classloader>
   <civix>
-    <namespace>CRM/Villageprofile</namespace>
+    <namespace>CRM/Civivillage</namespace>
     <format>25.10.2</format>
-    <angularModule>crmVillageprofile</angularModule>
+    <angularModule>crmCivivillage</angularModule>
   </civix>
   <mixins>
     <mixin>case-xml@1.0.0</mixin>

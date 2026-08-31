@@ -1,4 +1,4 @@
-Package: villageprofile
+Package: civivillage
 Copyright (C) 2026, Tac Tacelosky <tac@museado.org>
 Licensed under the GNU Affero Public License 3.0 (below).
 

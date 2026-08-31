@@ -6,10 +6,10 @@
  * The ExtensionUtil class provides small stubs for accessing resources of this
  * extension.
  */
-class CRM_Villageprofile_ExtensionUtil {
-  const SHORT_NAME = 'villageprofile';
-  const LONG_NAME = 'villageprofile';
-  const CLASS_PREFIX = 'CRM_Villageprofile';
+class CRM_Civivillage_ExtensionUtil {
+  const SHORT_NAME = 'civivillage';
+  const LONG_NAME = 'civivillage';
+  const CLASS_PREFIX = 'CRM_Civivillage';
 
   /**
    * Translate a string using the extension's domain.
@@ -77,14 +77,14 @@ class CRM_Villageprofile_ExtensionUtil {
 
 }
 
-use CRM_Villageprofile_ExtensionUtil as E;
+use CRM_Civivillage_ExtensionUtil as E;
 
 /**
  * (Delegated) Implements hook_civicrm_config().
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_config
  */
-function _villageprofile_civix_civicrm_config($config = NULL) {
+function _civivillage_civix_civicrm_config($config = NULL) {
   static $configured = FALSE;
   if ($configured) {
     return;
@@ -102,8 +102,8 @@ function _villageprofile_civix_civicrm_config($config = NULL) {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_install
  */
-function _villageprofile_civix_civicrm_install() {
-  _villageprofile_civix_civicrm_config();
+function _civivillage_civix_civicrm_install() {
+  _civivillage_civix_civicrm_config();
   // Based on <compatibility>, this does not currently require mixin/polyfill.php.
 }
 
@@ -112,8 +112,8 @@ function _villageprofile_civix_civicrm_install() {
  *
  * @link https://docs.civicrm.org/dev/en/latest/hooks/hook_civicrm_enable
  */
-function _villageprofile_civix_civicrm_enable(): void {
-  _villageprofile_civix_civicrm_config();
+function _civivillage_civix_civicrm_enable(): void {
+  _civivillage_civix_civicrm_config();
   // Based on <compatibility>, this does not currently require mixin/polyfill.php.
 }
 
@@ -128,7 +128,7 @@ function _villageprofile_civix_civicrm_enable(): void {
  *
  * @return bool
  */
-function _villageprofile_civix_insert_navigation_menu(&$menu, $path, $item) {
+function _civivillage_civix_insert_navigation_menu(&$menu, $path, $item) {
   // If we are done going down the path, insert menu
   if (empty($path)) {
     $menu[] = [
@@ -149,7 +149,7 @@ function _villageprofile_civix_insert_navigation_menu(&$menu, $path, $item) {
         if (!isset($entry['child'])) {
           $entry['child'] = [];
         }
-        $found = _villageprofile_civix_insert_navigation_menu($entry['child'], implode('/', $path), $item);
+        $found = _civivillage_civix_insert_navigation_menu($entry['child'], implode('/', $path), $item);
       }
     }
     return $found;
@@ -159,9 +159,9 @@ function _villageprofile_civix_insert_navigation_menu(&$menu, $path, $item) {
 /**
  * (Delegated) Implements hook_civicrm_navigationMenu().
  */
-function _villageprofile_civix_navigationMenu(&$nodes) {
+function _civivillage_civix_navigationMenu(&$nodes) {
   if (!is_callable(['CRM_Core_BAO_Navigation', 'fixNavigationMenu'])) {
-    _villageprofile_civix_fixNavigationMenu($nodes);
+    _civivillage_civix_fixNavigationMenu($nodes);
   }
 }
 
@@ -169,17 +169,17 @@ function _villageprofile_civix_navigationMenu(&$nodes) {
  * Given a navigation menu, generate navIDs for any items which are
  * missing them.
  */
-function _villageprofile_civix_fixNavigationMenu(&$nodes) {
+function _civivillage_civix_fixNavigationMenu(&$nodes) {
   $maxNavID = 1;
   array_walk_recursive($nodes, function($item, $key) use (&$maxNavID) {
     if ($key === 'navID') {
       $maxNavID = max($maxNavID, $item);
     }
   });
-  _villageprofile_civix_fixNavigationMenuItems($nodes, $maxNavID, NULL);
+  _civivillage_civix_fixNavigationMenuItems($nodes, $maxNavID, NULL);
 }
 
-function _villageprofile_civix_fixNavigationMenuItems(&$nodes, &$maxNavID, $parentID) {
+function _civivillage_civix_fixNavigationMenuItems(&$nodes, &$maxNavID, $parentID) {
   $origKeys = array_keys($nodes);
   foreach ($origKeys as $origKey) {
     if (!isset($nodes[$origKey]['attributes']['parentID']) && $parentID !== NULL) {
@@ -194,7 +194,7 @@ function _villageprofile_civix_fixNavigationMenuItems(&$nodes, &$maxNavID, $pare
       $origKey = $newKey;
     }
     if (isset($nodes[$origKey]['child']) && is_array($nodes[$origKey]['child'])) {
-      _villageprofile_civix_fixNavigationMenuItems($nodes[$origKey]['child'], $maxNavID, $nodes[$origKey]['attributes']['navID']);
+      _civivillage_civix_fixNavigationMenuItems($nodes[$origKey]['child'], $maxNavID, $nodes[$origKey]['attributes']['navID']);
     }
   }
 }
