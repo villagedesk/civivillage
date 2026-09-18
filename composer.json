@@ -1,0 +1,9 @@
+{
+    "name": "villagedesk/civivillage",
+    "description": "The CiviCRM extension that makes a village: service activity types, the Service Request case type, volunteer relationships and the custom fields a village runs on.",
+    "type": "civicrm-ext",
+    "license": "AGPL-3.0-or-later",
+    "require": {
+        "php": "^8.1"
+    }
+}
